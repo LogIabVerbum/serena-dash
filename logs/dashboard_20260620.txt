@@ -1,0 +1,74 @@
+[20/06/2026 18:59:00,18] Iniciando atualizacao do Dashboard 
+=======================================================
+  ATUALIZA DASHBOARD - LOGÍSTICA SERENA
+  20/06/2026 18:59
+=======================================================
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [AVISO] CORELACAO_NOME_TRANSP.xlsx não encontrada - usando mapeamentos fixos
+  [AVISO] Cadastro não encontrado: cadastro_clientes_consolidado.csv
+  [ARQ] Lendo: Quadro de Envios.xlsx
+Traceback (most recent call last):
+  File "C:\Users\a2p2t\OneDrive - Instituto Alfa e Beto\Log�stica-IAB\1 - QUADRO DE ENVIOS\Rotina_Preenchimento\GitHub\serena-dash\atualizar_dashboard.py", line 1772, in <module>
+    raw = processar_dados()
+  File "C:\Users\a2p2t\OneDrive - Instituto Alfa e Beto\Log�stica-IAB\1 - QUADRO DE ENVIOS\Rotina_Preenchimento\GitHub\serena-dash\atualizar_dashboard.py", line 622, in processar_dados
+    df = pd.read_excel(QUADRO_ENVIOS, sheet_name='Lan�amentos')
+         ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\a2p2t\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 481, in read_excel
+    io = ExcelFile(
+        io,
+    ...<2 lines>...
+        engine_kwargs=engine_kwargs,
+    )
+  File "C:\Users\a2p2t\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 1604, in __init__
+    ext = inspect_excel_format(
+        content_or_path=path_or_buffer, storage_options=storage_options
+    )
+  File "C:\Users\a2p2t\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 1452, in inspect_excel_format
+    with get_handle(
+         ~~~~~~~~~~^
+        content_or_path, "rb", storage_options=storage_options, is_text=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as handle:
+    ^
+  File "C:\Users\a2p2t\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\common.py", line 939, in get_handle
+    handle = open(handle, ioargs.mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\a2p2t\\OneDrive - Instituto Alfa e Beto\\Log�stica-IAB\\1 - QUADRO DE ENVIOS\\Rotina_Preenchimento\\GitHub\\serena-dash\\Quadro de Envios.xlsx'
+[18:59:03,02] ERRO 1 
+[20/06/2026 19:04:04,43] Iniciando atualizacao do Dashboard 
+=======================================================
+  ATUALIZA DASHBOARD - LOGÍSTICA SERENA
+  20/06/2026 19:04
+=======================================================
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [OK] Correlação carregada: 104 entradas
+  [OK] Cadastro carregado: 9,380 clientes
+  [ARQ] Lendo: Quadro de Envios.xlsx
+  [ARQ] Linhas válidas (Cons Analise=Sim): 3671
+  [AVISO] Transportadora sem mapeamento: '1689 - BRASPRESS TRANSPORTES URGENTES LTDA' - mantendo nome original
+  [OK] Datas corrigidas (efetiva<=coleta): 70
+  [OK] df_dedup: 3615 | concluídas: 3587 | pendentes: 28
+  [OK] Entregas consolidadas: 3298 | Não concluídas (sem data ef.): 28
+  [OK] TRANSP_SLA: 32 | TRANSP_FULL: 1081
+  [OK] RENT_FULL: 2484 clientes
+  [ARQ] Coords IBGE: 5571 municípios
+  [OK] Ano 2025: 1696 entregas | SLA 99.3% | Fat. líquido R$32,941,355
+  [OK] Ano 2026: 1602 entregas | SLA 98.1% | Fat. líquido R$37,675,314
+  [OK] Acompanhamento: 6 pendentes | 44 atrasadas
+  [OK] JSON salvo: dados_dashboard.json
+  [...] Atualizando dashboard_logistica.html...
+  [OK] TRANSP_FULL: 1081 registros
+  [OK] TRANSP_SLA: 32 registros
+  [OK] RENT_FULL: 2484 registros
+  [OK] H2.VERBUM completo atualizado
+  [OK] H2 sincronizado
+  [OK] Acompanhamento: 6 pendentes | 44 atrasadas
+  [OK] Selects de ano atualizados: ['2025', '2026']
+  [OK] Dashboard salvo (6347 KB)
+
+=======================================================
+  [OK] CONCLUÍDO em 3s
+  Abra o dashboard_logistica.html no navegador.
+=======================================================
+[19:04:08,60] OK 
