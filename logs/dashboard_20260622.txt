@@ -1,0 +1,50 @@
+
+[22/06/2026 09:50:04] Iniciando
+=======================================================
+  ATUALIZAÇÃO COMPLETA - LOGÍSTICA SERENA
+  22/06/2026 09:50
+=======================================================
+
+[1/3] BACKUP DO QUADRO DE ENVIOS
+  [OK] Backup salvo: backups/2026/062026/Quadro_de_Envios_22-06-2026.xlsx
+
+[2/3] INTEGRAÇÃO SANKHYA -> QUADRO DE ENVIOS
+  [ARQ] Lendo: arquivo_base.xls
+  [ARQ] Sankhya: 1801 registros válidos
+  [ARQ] Lendo Quadro de Envios: Quadro de Envios.xlsx
+  [ARQ] Quadro: 4312 lançamentos existentes
+  [ARQ] NFs realmente novas: 0 | Incompletas a corrigir: 0
+  [OK] Nenhuma NF nova - Quadro já está atualizado!
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [OK] Correlação carregada: 104 entradas
+  [OK] Cadastro carregado: 9,380 clientes
+  [ARQ] Lendo: Quadro de Envios.xlsx
+  [ARQ] Linhas válidas (Cons Analise=Sim): 3671
+  [AVISO] Transportadora sem mapeamento: '1689 - BRASPRESS TRANSPORTES URGENTES LTDA' - mantendo nome original
+  [OK] Tabela correspondência carregada: 184 nomes
+  [OK] Datas corrigidas (efetiva<=coleta): 70
+  [OK] df_dedup: 3615 | concluídas: 3589 | pendentes: 26
+  [OK] Entregas consolidadas: 3300 | com previsão (NS): 3300 | Não concluídas: 26
+  [OK] TRANSP_SLA: 32 | TRANSP_FULL: 1081
+  [OK] RENT_FULL: 2484 clientes
+  [ARQ] Coords IBGE: 5571 municípios
+  [OK] Ano 2025: 1696 entregas | SLA 99.3% | Fat. líquido R$32,941,355
+  [OK] Ano 2026: 1604 entregas | SLA 98.1% | Fat. líquido R$37,675,314
+  [OK] Acompanhamento: 6 pendentes | 44 atrasadas
+  [OK] JSON salvo: dados_dashboard.json
+  [...] Atualizando dashboard_logistica.html...
+  [OK] TRANSP_FULL: 1081 registros
+  [OK] TRANSP_SLA: 32 registros
+  [OK] RENT_FULL: 2484 registros
+  [OK] H2.VERBUM completo atualizado
+  [OK] H2 sincronizado
+  [OK] Acompanhamento: 6 pendentes | 44 atrasadas
+  [OK] Selects de ano atualizados: ['2025', '2026']
+  [OK] Dashboard salvo (6343 KB)
+  [OK] Dashboard neutro salvo (6342 KB)
+
+=======================================================
+  [OK] CONCLUÍDO em 8s
+  Abra o dashboard_logistica.html no navegador.
+=======================================================

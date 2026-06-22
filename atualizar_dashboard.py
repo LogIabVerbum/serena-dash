@@ -1671,7 +1671,10 @@ def atualizar_html(raw):
             vbm_difal = build_arr('difal')
             vbm_fcp   = build_arr('fcp')
             vbm_ent   = build_arr('ent')
-            vbm_ns    = [vbm.get(a, vbm.get(str(a),{})).get('ns', None) for a in ANOS]
+            vbm_ns    = [vbm.get(a, vbm.get(str(a), {})).get('ns', None) for a in ANOS]
+            # fallback: build_arr usa int(ano), vbm pode ter chaves int ou str
+            if all(v is None for v in vbm_ns):
+                vbm_ns = [next((d.get('ns') for k,d in vbm.items() if int(k)==a), None) for a in ANOS]
             vbm_ns_js = '['+','.join(str(v) if v is not None else 'null' for v in vbm_ns)+']' 
 
             verbum_new = (f'VERBUM: {{fat:{json.dumps([round(v,2) for v in vbm_fat])},'
@@ -1832,6 +1835,29 @@ def atualizar_html(raw):
 
 if __name__ == '__main__':
     inicio = datetime.now()
+
+    # -- Log automático em arquivo (pasta logs/ junto ao script) ---------------
+    try:
+        import pathlib as _pl
+        _log_dir = _pl.Path(__file__).parent / 'logs'
+        _log_dir.mkdir(parents=True, exist_ok=True)
+        _log_file = _log_dir / f"dashboard_{inicio.strftime('%Y%m%d')}.txt"
+        _log_fh = open(_log_file, 'a', encoding='utf-8')
+        _log_fh.write(f"\n[{inicio.strftime('%d/%m/%Y %H:%M:%S')}] Iniciando\n")
+        class _Tee:
+            def __init__(self, *s): self.s = s
+            def write(self, d):
+                for x in self.s:
+                    try: x.write(d)
+                    except: pass
+            def flush(self):
+                for x in self.s:
+                    try: x.flush()
+                    except: pass
+        sys.stdout = _Tee(sys.stdout, _log_fh)
+        sys.stderr = _Tee(sys.stderr, _log_fh)
+    except Exception as _le:
+        print(f"Aviso: log em arquivo não iniciado — {_le}")
 
     # -- Modo de execução ------------------------------------------------------
     so_quadro    = '--so-quadro'    in sys.argv
