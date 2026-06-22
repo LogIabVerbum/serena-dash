@@ -48,3 +48,327 @@
   [OK] CONCLUÍDO em 8s
   Abra o dashboard_logistica.html no navegador.
 =======================================================
+
+[22/06/2026 16:31:03] Iniciando
+=======================================================
+  ATUALIZAÇÃO COMPLETA - LOGÍSTICA SERENA
+  22/06/2026 16:31
+=======================================================
+
+[1/3] BACKUP DO QUADRO DE ENVIOS
+  [OK] Backup salvo: backups/2026/062026/Quadro_de_Envios_22-06-2026.xlsx
+
+[2/3] INTEGRAÇÃO SANKHYA -> QUADRO DE ENVIOS
+  [ARQ] Lendo: arquivo_base.xls
+  [ARQ] Sankhya: 1801 registros válidos
+  [ARQ] Lendo Quadro de Envios: Quadro de Envios.xlsx
+  [ARQ] Quadro: 4312 lançamentos existentes
+  [ARQ] NFs realmente novas: 0 | Incompletas a corrigir: 0
+  [OK] Nenhuma NF nova - Quadro já está atualizado!
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [OK] Correlação carregada: 104 entradas
+  [OK] Cadastro carregado: 9,380 clientes
+  [ARQ] Lendo: Quadro de Envios.xlsx
+  [ARQ] Linhas válidas (Cons Analise=Sim): 3672
+Traceback (most recent call last):
+  File "C:\Users\a2p2t\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\indexes\base.py", line 3641, in get_loc
+    return self._engine.get_loc(casted_key)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "pandas/_libs/index.pyx", line 168, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 197, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7668, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7676, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Transportadora'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\a2p2t\OneDrive - Instituto Alfa e Beto\Logística-IAB\1 - QUADRO DE ENVIOS\Rotina_Preenchimento\GitHub\serena-dash\atualizar_dashboard.py", line 2064, in <module>
+    raw = processar_dados()
+  File "C:\Users\a2p2t\OneDrive - Instituto Alfa e Beto\Logística-IAB\1 - QUADRO DE ENVIOS\Rotina_Preenchimento\GitHub\serena-dash\atualizar_dashboard.py", line 641, in processar_dados
+    df['Transp_Norm'] = df['Transportadora'].apply(lambda n: map_transp(n, cor_map))
+                        ~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\a2p2t\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\frame.py", line 4378, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "C:\Users\a2p2t\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\indexes\base.py", line 3648, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Transportadora'
+
+[22/06/2026 16:38:34] Iniciando
+=======================================================
+  ATUALIZA DASHBOARD - LOGÍSTICA SERENA
+  22/06/2026 16:38
+=======================================================
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [OK] Correlação carregada: 104 entradas
+  [OK] Cadastro carregado: 9,380 clientes
+  [ARQ] Lendo: Quadro de Envios.xlsx
+  [ARQ] Linhas válidas (Cons Analise=Sim): 3672
+  [OK] Tabela correspondência carregada: 184 nomes
+  [OK] Datas corrigidas (efetiva<=coleta): 69
+  [OK] df_dedup: 3616 | concluídas: 3596 | pendentes: 20
+  [OK] Entregas consolidadas: 3304 | com previsão (NS): 3304 | Não concluídas: 20
+  [OK] TRANSP_SLA: 32 | TRANSP_FULL: 1083
+  [OK] RENT_FULL: 2484 clientes
+  [ARQ] Coords IBGE: 5571 municípios
+  [OK] Ano 2025: 1696 entregas | SLA 99.3% | Fat. líquido R$32,941,355
+  [OK] Ano 2026: 1608 entregas | SLA 98.1% | Fat. líquido R$37,693,441
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] JSON salvo: dados_dashboard.json
+  [...] Atualizando dashboard_logistica.html...
+  [OK] TRANSP_FULL: 1083 registros
+  [OK] TRANSP_SLA: 32 registros
+  [OK] RENT_FULL: 2484 registros
+  [OK] H2.VERBUM completo atualizado
+  [OK] H2 sincronizado
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] Selects de ano atualizados: ['2025', '2026']
+  [OK] Dashboard salvo (6356 KB)
+  [OK] Dashboard neutro salvo (6355 KB)
+  [...] Buscando dados do Comercial no Notion...
+  [OK] 292 registros encontrados no Notion
+  [OK] 0 registros considerados (com valor + status válido)
+  [OK] dados_comercial.json salvo (0 registros)
+  [OK] dashboard_logistica.html atualizado com dados do Comercial
+  [OK] dashboard_neutro.html atualizado com dados do Comercial
+  [OK] Comercial atualizado com sucesso!
+
+=======================================================
+  [OK] CONCLUÍDO em 8s
+  Abra o dashboard_logistica.html no navegador.
+=======================================================
+
+[22/06/2026 16:42:09] Iniciando
+=======================================================
+  ATUALIZA DASHBOARD - LOGÍSTICA SERENA
+  22/06/2026 16:42
+=======================================================
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [OK] Correlação carregada: 104 entradas
+  [OK] Cadastro carregado: 9,380 clientes
+  [ARQ] Lendo: Quadro de Envios.xlsx
+  [ARQ] Linhas válidas (Cons Analise=Sim): 3672
+  [OK] Tabela correspondência carregada: 184 nomes
+  [OK] Datas corrigidas (efetiva<=coleta): 69
+  [OK] df_dedup: 3616 | concluídas: 3596 | pendentes: 20
+  [OK] Entregas consolidadas: 3304 | com previsão (NS): 3304 | Não concluídas: 20
+  [OK] TRANSP_SLA: 32 | TRANSP_FULL: 1083
+  [OK] RENT_FULL: 2484 clientes
+  [ARQ] Coords IBGE: 5571 municípios
+  [OK] Ano 2025: 1696 entregas | SLA 99.3% | Fat. líquido R$32,941,355
+  [OK] Ano 2026: 1608 entregas | SLA 98.1% | Fat. líquido R$37,693,441
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] JSON salvo: dados_dashboard.json
+  [...] Atualizando dashboard_logistica.html...
+  [OK] TRANSP_FULL: 1083 registros
+  [OK] TRANSP_SLA: 32 registros
+  [OK] RENT_FULL: 2484 registros
+  [OK] H2.VERBUM completo atualizado
+  [OK] H2 sincronizado
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] Selects de ano atualizados: ['2025', '2026']
+  [OK] Dashboard salvo (6356 KB)
+  [OK] Dashboard neutro salvo (6355 KB)
+  [...] Buscando dados do Comercial no Notion...
+  [OK] 292 registros encontrados no Notion
+  [ARQ] Status encontrados: []
+  [OK] 0 registros considerados (com valor + status válido)
+  [OK] dados_comercial.json salvo (0 registros)
+  [OK] dashboard_logistica.html atualizado com dados do Comercial
+  [OK] dashboard_neutro.html atualizado com dados do Comercial
+  [OK] Comercial atualizado com sucesso!
+
+=======================================================
+  [OK] CONCLUÍDO em 7s
+  Abra o dashboard_logistica.html no navegador.
+=======================================================
+
+[22/06/2026 16:43:29] Iniciando
+=======================================================
+  ATUALIZA DASHBOARD - LOGÍSTICA SERENA
+  22/06/2026 16:43
+=======================================================
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [OK] Correlação carregada: 104 entradas
+  [OK] Cadastro carregado: 9,380 clientes
+  [ARQ] Lendo: Quadro de Envios.xlsx
+  [ARQ] Linhas válidas (Cons Analise=Sim): 3672
+  [OK] Tabela correspondência carregada: 184 nomes
+  [OK] Datas corrigidas (efetiva<=coleta): 69
+  [OK] df_dedup: 3616 | concluídas: 3596 | pendentes: 20
+  [OK] Entregas consolidadas: 3304 | com previsão (NS): 3304 | Não concluídas: 20
+  [OK] TRANSP_SLA: 32 | TRANSP_FULL: 1083
+  [OK] RENT_FULL: 2484 clientes
+  [ARQ] Coords IBGE: 5571 municípios
+  [OK] Ano 2025: 1696 entregas | SLA 99.3% | Fat. líquido R$32,941,355
+  [OK] Ano 2026: 1608 entregas | SLA 98.1% | Fat. líquido R$37,693,441
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] JSON salvo: dados_dashboard.json
+  [...] Atualizando dashboard_logistica.html...
+  [OK] TRANSP_FULL: 1083 registros
+  [OK] TRANSP_SLA: 32 registros
+  [OK] RENT_FULL: 2484 registros
+  [OK] H2.VERBUM completo atualizado
+  [OK] H2 sincronizado
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] Selects de ano atualizados: ['2025', '2026']
+  [OK] Dashboard salvo (6356 KB)
+  [OK] Dashboard neutro salvo (6355 KB)
+  [...] Buscando dados do Comercial no Notion...
+  [OK] 292 registros encontrados no Notion
+  [ARQ] Propriedades disponíveis: ['Vendedor', 'Status', 'Tipo de Venda', 'Contato', 'Parcelamento', 'Alunos atendidos', 'E-mail', 'Data estimada do fechamento', 'Como nos encontrou?', 'Temperatura', 'Bonificação/desconto', 'Modalidade', 'Telefone', 'PERFIL', 'Município', 'Fonte Pagadora', 'Coord.', 'Observação', 'Propostas 2025/26 (R$)', 'Proposta 2024/25 (R$)', 'Cliente', 'Ano', 'Estado']
+  [ARQ] Status encontrados: []
+  [OK] 0 registros considerados (com valor + status válido)
+  [OK] dados_comercial.json salvo (0 registros)
+  [OK] dashboard_logistica.html atualizado com dados do Comercial
+  [OK] dashboard_neutro.html atualizado com dados do Comercial
+  [OK] Comercial atualizado com sucesso!
+
+=======================================================
+  [OK] CONCLUÍDO em 7s
+  Abra o dashboard_logistica.html no navegador.
+=======================================================
+
+[22/06/2026 16:45:18] Iniciando
+=======================================================
+  ATUALIZA DASHBOARD - LOGÍSTICA SERENA
+  22/06/2026 16:45
+=======================================================
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [OK] Correlação carregada: 104 entradas
+  [OK] Cadastro carregado: 9,380 clientes
+  [ARQ] Lendo: Quadro de Envios.xlsx
+  [ARQ] Linhas válidas (Cons Analise=Sim): 3672
+  [OK] Tabela correspondência carregada: 184 nomes
+  [OK] Datas corrigidas (efetiva<=coleta): 69
+  [OK] df_dedup: 3616 | concluídas: 3596 | pendentes: 20
+  [OK] Entregas consolidadas: 3304 | com previsão (NS): 3304 | Não concluídas: 20
+  [OK] TRANSP_SLA: 32 | TRANSP_FULL: 1083
+  [OK] RENT_FULL: 2484 clientes
+  [ARQ] Coords IBGE: 5571 municípios
+  [OK] Ano 2025: 1696 entregas | SLA 99.3% | Fat. líquido R$32,941,355
+  [OK] Ano 2026: 1608 entregas | SLA 98.1% | Fat. líquido R$37,693,441
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] JSON salvo: dados_dashboard.json
+  [...] Atualizando dashboard_logistica.html...
+  [OK] TRANSP_FULL: 1083 registros
+  [OK] TRANSP_SLA: 32 registros
+  [OK] RENT_FULL: 2484 registros
+  [OK] H2.VERBUM completo atualizado
+  [OK] H2 sincronizado
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] Selects de ano atualizados: ['2025', '2026']
+  [OK] Dashboard salvo (6356 KB)
+  [OK] Dashboard neutro salvo (6355 KB)
+  [...] Buscando dados do Comercial no Notion...
+  [OK] 292 registros encontrados no Notion
+  [ARQ] Status encontrados: []
+  [OK] 0 registros considerados (com valor + status válido)
+  [OK] dados_comercial.json salvo (0 registros)
+  [OK] dashboard_logistica.html atualizado com dados do Comercial
+  [OK] dashboard_neutro.html atualizado com dados do Comercial
+  [OK] Comercial atualizado com sucesso!
+
+=======================================================
+  [OK] CONCLUÍDO em 7s
+  Abra o dashboard_logistica.html no navegador.
+=======================================================
+
+[22/06/2026 16:46:17] Iniciando
+=======================================================
+  ATUALIZA DASHBOARD - LOGÍSTICA SERENA
+  22/06/2026 16:46
+=======================================================
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [OK] Correlação carregada: 104 entradas
+  [OK] Cadastro carregado: 9,380 clientes
+  [ARQ] Lendo: Quadro de Envios.xlsx
+  [ARQ] Linhas válidas (Cons Analise=Sim): 3672
+  [OK] Tabela correspondência carregada: 184 nomes
+  [OK] Datas corrigidas (efetiva<=coleta): 69
+  [OK] df_dedup: 3616 | concluídas: 3596 | pendentes: 20
+  [OK] Entregas consolidadas: 3304 | com previsão (NS): 3304 | Não concluídas: 20
+  [OK] TRANSP_SLA: 32 | TRANSP_FULL: 1083
+  [OK] RENT_FULL: 2484 clientes
+  [ARQ] Coords IBGE: 5571 municípios
+  [OK] Ano 2025: 1696 entregas | SLA 99.3% | Fat. líquido R$32,941,355
+  [OK] Ano 2026: 1608 entregas | SLA 98.1% | Fat. líquido R$37,693,441
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] JSON salvo: dados_dashboard.json
+  [...] Atualizando dashboard_logistica.html...
+  [OK] TRANSP_FULL: 1083 registros
+  [OK] TRANSP_SLA: 32 registros
+  [OK] RENT_FULL: 2484 registros
+  [OK] H2.VERBUM completo atualizado
+  [OK] H2 sincronizado
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] Selects de ano atualizados: ['2025', '2026']
+  [OK] Dashboard salvo (6356 KB)
+  [OK] Dashboard neutro salvo (6355 KB)
+  [...] Buscando dados do Comercial no Notion...
+  [OK] 292 registros encontrados no Notion
+  [ARQ] Status raw (primeira página): {'id': 'B%5D%3B%3D', 'type': 'status', 'status': {'id': ']]L=', 'name': '09 - Lead não convertido', 'color': 'red'}}
+  [ARQ] Status encontrados: []
+  [OK] 0 registros considerados (com valor + status válido)
+  [OK] dados_comercial.json salvo (0 registros)
+  [OK] dashboard_logistica.html atualizado com dados do Comercial
+  [OK] dashboard_neutro.html atualizado com dados do Comercial
+  [OK] Comercial atualizado com sucesso!
+
+=======================================================
+  [OK] CONCLUÍDO em 7s
+  Abra o dashboard_logistica.html no navegador.
+=======================================================
+
+[22/06/2026 16:47:12] Iniciando
+=======================================================
+  ATUALIZA DASHBOARD - LOGÍSTICA SERENA
+  22/06/2026 16:47
+=======================================================
+
+[3/3] PROCESSANDO DADOS -> ATUALIZANDO DASHBOARD
+  [OK] Correlação carregada: 104 entradas
+  [OK] Cadastro carregado: 9,380 clientes
+  [ARQ] Lendo: Quadro de Envios.xlsx
+  [ARQ] Linhas válidas (Cons Analise=Sim): 3672
+  [OK] Tabela correspondência carregada: 184 nomes
+  [OK] Datas corrigidas (efetiva<=coleta): 69
+  [OK] df_dedup: 3616 | concluídas: 3596 | pendentes: 20
+  [OK] Entregas consolidadas: 3304 | com previsão (NS): 3304 | Não concluídas: 20
+  [OK] TRANSP_SLA: 32 | TRANSP_FULL: 1083
+  [OK] RENT_FULL: 2484 clientes
+  [ARQ] Coords IBGE: 5571 municípios
+  [OK] Ano 2025: 1696 entregas | SLA 99.3% | Fat. líquido R$32,941,355
+  [OK] Ano 2026: 1608 entregas | SLA 98.1% | Fat. líquido R$37,693,441
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] JSON salvo: dados_dashboard.json
+  [...] Atualizando dashboard_logistica.html...
+  [OK] TRANSP_FULL: 1083 registros
+  [OK] TRANSP_SLA: 32 registros
+  [OK] RENT_FULL: 2484 registros
+  [OK] H2.VERBUM completo atualizado
+  [OK] H2 sincronizado
+  [OK] Acompanhamento: 2 pendentes | 46 atrasadas
+  [OK] Selects de ano atualizados: ['2025', '2026']
+  [OK] Dashboard salvo (6356 KB)
+  [OK] Dashboard neutro salvo (6355 KB)
+  [...] Buscando dados do Comercial no Notion...
+  [OK] 292 registros encontrados no Notion
+  [ARQ] Status raw (primeira página): {'id': 'B%5D%3B%3D', 'type': 'status', 'status': {'id': ']]L=', 'name': '09 - Lead não convertido', 'color': 'red'}}
+  [ARQ] Status encontrados: ['02 - Contato realizado', '03 - Proposta Enviada', '04 - Documentação enviada', '05 - Contrato enviado', '08 - Material enviado', '09 - Lead não convertido', '10 - Cliente Perdido']
+  [OK] 128 registros considerados (com valor + status válido)
+  [OK] dados_comercial.json salvo (128 registros)
+  [OK] dashboard_logistica.html atualizado com dados do Comercial
+  [OK] dashboard_neutro.html atualizado com dados do Comercial
+  [OK] Comercial atualizado com sucesso!
+
+=======================================================
+  [OK] CONCLUÍDO em 8s
+  Abra o dashboard_logistica.html no navegador.
+=======================================================

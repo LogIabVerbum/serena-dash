@@ -1833,6 +1833,190 @@ def atualizar_html(raw):
         log(f'dashboard_neutro.html não encontrado - pulando', 'aviso')
 
 
+# ── COMERCIAL — Notion ────────────────────────────────────────────────────────
+NOTION_TOKEN  = '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'
+NOTION_DB_ID  = '27051690-649a-804c-84c5-d13455af4136'
+JSON_COMERCIAL = PASTA_GITHUB / 'dados_comercial.json'
+
+# Status que devem ser CONSIDERADOS no dashboard
+STATUS_CONSIDERAR = {'05 - contrato enviado', '08 - material enviado'}
+# Mapa de estados para regiões
+REGIOES = {
+    'AC':'Norte','AM':'Norte','AP':'Norte','PA':'Norte','RO':'Norte','RR':'Norte','TO':'Norte',
+    'AL':'Nordeste','BA':'Nordeste','CE':'Nordeste','MA':'Nordeste','PB':'Nordeste',
+    'PE':'Nordeste','PI':'Nordeste','RN':'Nordeste','SE':'Nordeste',
+    'DF':'Centro-Oeste','GO':'Centro-Oeste','MS':'Centro-Oeste','MT':'Centro-Oeste',
+    'ES':'Sudeste','MG':'Sudeste','RJ':'Sudeste','SP':'Sudeste',
+    'PR':'Sul','RS':'Sul','SC':'Sul',
+}
+
+def _notion_get_prop(props, key):
+    p = props.get(key)
+    if not p: return ''
+    t = p.get('type','')
+    if t == 'title':       return ''.join(x.get('plain_text','') for x in p.get('title',[]))
+    if t == 'rich_text':   return ''.join(x.get('plain_text','') for x in p.get('rich_text',[]))
+    if t == 'select':      return (p.get('select') or {}).get('name','')
+    if t == 'status':      return (p.get('status') or {}).get('name','')
+    if t == 'multi_select':return ', '.join(s.get('name','') for s in p.get('multi_select',[]))
+    if t == 'number':      return p.get('number') or 0
+    if t == 'formula':
+        f = p.get('formula',{})
+        return f.get('number') or f.get('string','')
+    if t == 'rollup':
+        r = p.get('rollup',{})
+        return r.get('number') or 0
+    return ''
+
+def _notion_find_key(props, *hints):
+    keys = list(props.keys())
+    for h in hints:
+        found = next((k for k in keys if h.lower() in k.lower()), None)
+        if found: return found
+    return ''
+
+def atualizar_comercial():
+    """Busca dados do Notion e injeta JSON estático nos dashboards."""
+    import urllib.request, urllib.error
+
+    log('Buscando dados do Comercial no Notion...', 'proc')
+
+    pages, cursor = [], None
+    while True:
+        body = json.dumps({'page_size': 100, **({'start_cursor': cursor} if cursor else {})}).encode()
+        req  = urllib.request.Request(
+            f'https://api.notion.com/v1/databases/{NOTION_DB_ID}/query',
+            data=body,
+            headers={
+                'Authorization': f'Bearer {NOTION_TOKEN}',
+                'Notion-Version': '2022-06-28',
+                'Content-Type': 'application/json',
+            },
+            method='POST'
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                data = json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            log(f'Erro HTTP ao acessar Notion: {e.code} {e.reason}', 'erro')
+            return
+        except Exception as e:
+            log(f'Erro ao acessar Notion: {e}', 'erro')
+            return
+
+        pages.extend(data.get('results', []))
+        if data.get('has_more'):
+            cursor = data.get('next_cursor')
+        else:
+            break
+
+    log(f'{len(pages)} registros encontrados no Notion', 'ok')
+
+    # Debug: mostrar o campo Status raw da primeira página
+    if pages:
+        pr0 = pages[0].get('properties', {})
+        status_raw = pr0.get('Status', {})
+        log(f'Status raw (primeira página): {status_raw}', 'info')
+
+    # Mostrar quais status existem no Notion (para debug)
+    status_encontrados = set()
+    for page in pages:
+        pr = page.get('properties', {})
+        s = str(_notion_get_prop(pr, 'Status')).strip()
+        if s: status_encontrados.add(s)
+    log(f'Status encontrados: {sorted(status_encontrados)}', 'info')
+
+    # Mapear páginas
+    registros = []
+    for page in pages:
+        pr = page.get('properties', {})
+        fk = lambda *h: _notion_find_key(pr, *h)
+
+        valor_raw = _notion_get_prop(pr, 'Propostas 2025/26 (R$)')
+        try:
+            if isinstance(valor_raw, (int, float)):
+                valor = float(valor_raw)
+            else:
+                v = str(valor_raw).replace('.','').replace(',','.').strip()
+                valor = float(v) if v else 0
+        except:
+            valor = 0
+
+        if valor <= 0:
+            continue
+
+        status = str(_notion_get_prop(pr, 'Status')).strip()
+        if not any(s in status.lower() for s in STATUS_CONSIDERAR):
+            continue
+
+        estado = str(_notion_get_prop(pr, 'Estado')).strip().upper()
+        registros.append({
+            'vendedor':    str(_notion_get_prop(pr, 'Vendedor')).strip(),
+            'perfil':      str(_notion_get_prop(pr, 'PERFIL')).strip(),
+            'cliente':     str(_notion_get_prop(pr, 'Cliente')).strip(),
+            'estado':      estado,
+            'municipio':   str(_notion_get_prop(pr, 'Município')).strip(),
+            'valor':       round(valor, 2),
+            'status':      status,
+            'temperatura': str(_notion_get_prop(pr, 'Temperatura')).strip(),
+            'tipoVenda':   str(_notion_get_prop(pr, 'Tipo de Venda')).strip(),
+            'regiao':      REGIOES.get(estado, 'Outros'),
+        })
+
+    log(f'{len(registros)} registros considerados (com valor + status válido)', 'ok')
+
+    # Calcular KPIs e agrupamentos
+    valor_total   = sum(r['valor'] for r in registros)
+    por_status    = {}
+    por_regiao    = {}
+    for r in registros:
+        s = r['status']
+        por_status[s] = por_status.get(s, 0) + r['valor']
+        rg = r['regiao']
+        por_regiao[rg] = por_regiao.get(rg, 0) + r['valor']
+
+    payload = {
+        'atualizado_em': datetime.now().strftime('%d/%m/%Y %H:%M'),
+        'total':         len(registros),
+        'valor_total':   round(valor_total, 2),
+        'por_status':    por_status,
+        'por_regiao':    por_regiao,
+        'registros':     registros,
+    }
+
+    # Salvar JSON local (para debug/backup)
+    with open(JSON_COMERCIAL, 'w', encoding='utf-8') as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    log(f'dados_comercial.json salvo ({len(registros)} registros)', 'ok')
+
+    # Injetar nos dashboards HTML
+    json_str = f'const COMERCIAL_DATA = {json.dumps(payload, ensure_ascii=False)};'
+    marker_start = '/* COMERCIAL_DATA_START */'
+    marker_end   = '/* COMERCIAL_DATA_END */'
+    bloco = f'{marker_start}\n{json_str}\n{marker_end}'
+
+    for html_file in [HTML_DASHBOARD, HTML_NEUTRO]:
+        if not html_file.exists():
+            continue
+        with open(html_file, encoding='utf-8') as f:
+            html = f.read()
+
+        if marker_start in html:
+            # Substituir bloco existente
+            idx_s = html.find(marker_start)
+            idx_e = html.find(marker_end) + len(marker_end)
+            html  = html[:idx_s] + bloco + html[idx_e:]
+        else:
+            # Inserir antes do </body>
+            html = html.replace('</body>', f'<script>\n{bloco}\n</script>\n</body>', 1)
+
+        with open(html_file, 'w', encoding='utf-8') as f:
+            f.write(html)
+        log(f'{html_file.name} atualizado com dados do Comercial', 'ok')
+
+    log('Comercial atualizado com sucesso!', 'ok')
+
+
 if __name__ == '__main__':
     inicio = datetime.now()
 
@@ -1888,6 +2072,7 @@ if __name__ == '__main__':
         if raw is None:
             sys.exit(1)
         atualizar_html(raw)
+        atualizar_comercial()
 
     else:
         # Modo completo - faz tudo
@@ -1898,6 +2083,7 @@ if __name__ == '__main__':
         if raw is None:
             sys.exit(1)
         atualizar_html(raw)
+        atualizar_comercial()
 
     fim = datetime.now()
     print(f"\n{'=' * 55}")
