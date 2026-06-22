@@ -645,6 +645,38 @@ def processar_dados():
     df['Municipio']   = df['Municipio'].fillna('').str.strip().str.upper()
     df['UF']          = df['UF'].fillna('').str.strip().str.upper()
 
+    # -- Normalizar nomes de Escolas e Municípios via tabela_correspondencia ----
+    import re as _re_cnpj
+    def _nc(c):
+        return _re_cnpj.sub(r'[.\-/\s,]', '', str(c)).strip().lstrip('0') if c else ''
+
+    _nome_map_global = {}
+    try:
+        _tab_path2 = PASTA_RAIZ / 'tabela_correspondencia.xlsx'
+        if _tab_path2.exists():
+            for _sht in ['Escolas', 'Municípios']:
+                _df_tab = pd.read_excel(_tab_path2, sheet_name=_sht, header=2, engine='openpyxl')
+                _df_tab.columns = [str(c).strip() for c in _df_tab.columns]
+                _col_cnpj2 = next((c for c in _df_tab.columns if 'CNPJ' in c.upper()), None)
+                _col_pad2  = next((c for c in _df_tab.columns if 'PADRONIZADO' in c.upper()), None)
+                if _col_cnpj2 and _col_pad2:
+                    for _, _r in _df_tab.iterrows():
+                        _cnpj2 = _nc(str(_r[_col_cnpj2]))
+                        _pad2  = str(_r[_col_pad2]).strip()
+                        if _cnpj2 and _pad2 and _pad2.lower() not in ('nan','none',''):
+                            _nome_map_global[_cnpj2] = _pad2
+            log(f'Tabela correspondência carregada: {len(_nome_map_global)} nomes', 'ok')
+        else:
+            log('tabela_correspondencia.xlsx não encontrada na pasta raiz', 'aviso')
+    except Exception as _e2:
+        log(f'Erro ao carregar tabela_correspondencia: {_e2}', 'aviso')
+
+    if _nome_map_global:
+        df['Cliente'] = df.apply(
+            lambda r: _nome_map_global.get(_nc(str(r['CNPJ / CPF'])), r['Cliente']),
+            axis=1
+        )
+
     # Detectar nome da coluna de data de coleta
     _col_data = next((c for c in df.columns if 'coleta' in c.lower()), 'Data Coleta')
     if _col_data != 'Data Coleta': df = df.rename(columns={_col_data: 'Data Coleta'})
@@ -748,14 +780,18 @@ def processar_dados():
         })
 
     df_ent = pd.DataFrame(entregas) if entregas else pd.DataFrame()
-    log(f"Entregas consolidadas: {len(df_ent)} | Não concluídas (sem data ef.): {sem_data_ef}", 'ok')
+    if len(df_ent) > 0 and 'sem_prev' not in df_ent.columns:
+        df_ent['sem_prev'] = 0
+    # df_ent_ns: apenas entregas COM previsão preenchida (para cálculo correto de NS/SLA)
+    df_ent_ns = df_ent[df_ent['sem_prev'] == 0].copy() if len(df_ent) > 0 else pd.DataFrame()
+    log(f"Entregas consolidadas: {len(df_ent)} | com previsão (NS): {len(df_ent_ns)} | Não concluídas: {sem_data_ef}", 'ok')
 
     # -- TRANSP_SLA e TRANSP_FULL para a aba Transportadoras ------------------
     transp_sla  = []
     transp_full = []
 
-    if len(df_ent) > 0:
-        df_ent_2526 = df_ent[df_ent['Ano Ref'].isin([2025, 2026])].copy()
+    if len(df_ent_ns) > 0:
+        df_ent_2526 = df_ent_ns[df_ent_ns['Ano Ref'].isin([2025, 2026])].copy()
 
         for (ano, transp), g in df_ent_2526.groupby(['Ano Ref','Transp_Norm']):
             tot   = int(g['entregas'].sum())
@@ -1044,8 +1080,8 @@ def processar_dados():
     # -- NS por empresa x ano (para atualizar H2.ns_iab e H2.VERBUM.ns) ---------
     ns_iab_por_ano    = {}
     ns_verbum_por_ano = {}
-    if len(df_ent) > 0:
-        for (ano, emp), g in df_ent.groupby(['Ano Ref', 'Empresa']):
+    if len(df_ent_ns) > 0:
+        for (ano, emp), g in df_ent_ns.groupby(['Ano Ref', 'Empresa']):
             prazo = int(g['no_prazo'].sum())
             total = int(g['entregas'].sum())
             ns    = round(prazo / max(total, 1) * 100, 1)
@@ -1083,7 +1119,7 @@ def processar_dados():
             }
             # VERBUM
             g_vbm = g_all[g_all['Empresa']=='VERBUM']
-            g_ent_vbm = df_ent[(df_ent['Ano Ref']==ano) & (df_ent['Empresa']=='VERBUM')] if df_ent is not None else None
+            g_ent_vbm = df_ent_ns[(df_ent_ns['Ano Ref']==ano) & (df_ent_ns['Empresa']=='VERBUM')] if len(df_ent_ns) > 0 else None
             ent_vbm = int(g_ent_vbm['entregas'].sum()) if g_ent_vbm is not None and len(g_ent_vbm) > 0 else 0
             praz_vbm= int(g_ent_vbm['no_prazo'].sum())  if g_ent_vbm is not None and len(g_ent_vbm) > 0 else 0
             ns_vbm  = round(praz_vbm/max(ent_vbm,1)*100,1) if ent_vbm > 0 else None
@@ -1635,7 +1671,7 @@ def atualizar_html(raw):
             vbm_difal = build_arr('difal')
             vbm_fcp   = build_arr('fcp')
             vbm_ent   = build_arr('ent')
-            vbm_ns    = [vbm.get(str(a),{}).get('ns', None) for a in ANOS]
+            vbm_ns    = [vbm.get(a, vbm.get(str(a),{})).get('ns', None) for a in ANOS]
             vbm_ns_js = '['+','.join(str(v) if v is not None else 'null' for v in vbm_ns)+']' 
 
             verbum_new = (f'VERBUM: {{fat:{json.dumps([round(v,2) for v in vbm_fat])},'
