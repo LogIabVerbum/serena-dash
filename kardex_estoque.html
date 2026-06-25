@@ -115,8 +115,8 @@ td.valor{font-weight:600}
   </div>
   <!-- Nav seção -->
   <div style="display:flex;gap:0;background:#F7F5F0;border:1px solid #E0DDD5;border-radius:22px;padding:3px;margin-right:8px">
-    <button class="sec-btn active" onclick="setSecao('kardex',this)" style="padding:4px 14px;border-radius:18px;border:none;background:#1E5FA3;color:#fff;font-size:11px;font-weight:600;cursor:pointer">📦 Kardex</button>
-    <button class="sec-btn" onclick="setSecao('kpi',this)" style="padding:4px 14px;border-radius:18px;border:none;background:transparent;color:#8C8A85;font-size:11px;font-weight:600;cursor:pointer">📊 KPI Estoque</button>
+    <button class="sec-btn active" onclick="setSecao('kardex',this)" style="padding:4px 14px;border-radius:18px;border:none;background:transparent;color:#8C8A85;font-size:11px;font-weight:600;cursor:pointer">📦 Kardex</button>
+    <button class="sec-btn active" onclick="setSecao('kpi',this)" style="padding:4px 14px;border-radius:18px;border:none;background:#1E5FA3;color:#fff;font-size:11px;font-weight:600;cursor:pointer">📊 KPI Estoque</button>
   </div>
   <div class="emp-tabs">
     <button class="emp-btn active" onclick="setEmp('IAB',this)">
@@ -129,7 +129,7 @@ td.valor{font-weight:600}
 </div>
 
 <!-- TOOLBAR -->
-<div class="toolbar">
+<div class="toolbar" style="display:none">
   <input class="search-box" type="text" id="search" placeholder="🔍 Buscar código ou descrição..." oninput="render()">
   <button class="btn-periodo" onclick="openModal()">
     📅 Períodos <span class="badge" id="badge-per">0</span>
@@ -160,7 +160,7 @@ td.valor{font-weight:600}
 </div>
 
 <!-- TABELA -->
-<div class="table-wrap">
+<div class="table-wrap" style="display:none">
   <div class="count-info" id="count-info"></div>
   <div id="table-container"></div>
 </div>
@@ -339,7 +339,7 @@ window.addEventListener('resize', fixTheadTop);
 </script>
 
 <!-- SEÇÃO KPI -->
-<div id="sec-kpi" style="display:none;padding:16px;max-width:1400px;margin:0 auto">
+<div id="sec-kpi" style="display:block;padding:16px;max-width:1400px;margin:0 auto">
 
   <!-- Filtro período KPI -->
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
@@ -447,7 +447,7 @@ tr:nth-child(even) .kpi-giro-td{background:#FAF9F6}
 </style>
 
 <script>
-let secaoAtual = 'kardex';
+let secaoAtual = 'kpi';
 
 function setSecao(sec, btn) {
   secaoAtual = sec;
